@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 
 //component imports
 import MealItem from './../components/MealItem';
@@ -17,7 +17,8 @@ class CategoryMealsScreen extends Component {
 		const selectedCategory = CATEGORIES.find((category) => category.id === categoryId);
 
 		return {
-			title: selectedCategory.title,
+            title: selectedCategory.title,
+            headerBackTitle: "Back",
 		};
 	};
 
@@ -31,7 +32,7 @@ class CategoryMealsScreen extends Component {
                 imageUrl = {itemData.item.imageUrl}
 				onSelect={() => {
 					this.props.navigation.navigate('MealDetail', {
-						mealId: itemData.item.id,
+						"mealId": itemData.item.id,
 					});
 				}}
 			/>
