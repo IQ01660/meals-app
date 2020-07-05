@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList } from 'react-native';
+
+//component imports
+import MealItem from './../components/MealItem';
+
+//constant imports
+import Colors from './../constants/Colors';
 
 //data imports
-import { CATEGORIES } from './../data/dummy-data';
+import { CATEGORIES, MEALS } from './../data/dummy-data';
 
 class CategoryMealsScreen extends Component {
 	static navigationOptions = ({ navigation }) => {
@@ -15,21 +21,35 @@ class CategoryMealsScreen extends Component {
 		};
 	};
 
+	renderMealItem = (itemData) => {
+		return (
+			<MealItem
+				title={itemData.item.title}
+                duration={itemData.item.duration}
+                complexity={itemData.item.complexity}
+                affordability={itemData.item.affordability}
+                imageUrl = {itemData.item.imageUrl}
+				onSelect={() => {
+					this.props.navigation.navigate('MealDetail', {
+						mealId: itemData.item.id,
+					});
+				}}
+			/>
+		);
+	};
+
 	render() {
 		const categoryId = this.props.navigation.getParam('categoryId');
 
-		const selectedCategory = CATEGORIES.find((category) => category.id === categoryId);
+		const displayedMeals = MEALS.filter((meal, index, meals) => {
+			return meal.categoryIds.includes(categoryId);
+		});
 
 		return (
 			<View style={styles.screen}>
-				<Text>The Category Meals Screen!</Text>
-				<Text>{selectedCategory.title}</Text>
-				<Button
-					title="Go to Details"
-					onPress={() => {
-						this.props.navigation.navigate({ routeName: 'MealDetail' });
-					}}
-				/>
+				<View style={{width: '90%', flex: 1, }}>
+					<FlatList data={displayedMeals} renderItem={this.renderMealItem} />
+				</View>
 			</View>
 		);
 	}
@@ -38,8 +58,8 @@ class CategoryMealsScreen extends Component {
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
-		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: Colors.primaryColor
 	},
 });
 
